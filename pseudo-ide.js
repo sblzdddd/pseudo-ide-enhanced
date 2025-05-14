@@ -7,15 +7,16 @@ const dataTypes = ['INTEGER', 'REAL', 'STRING', 'BOOLEAN', 'CHAR', 'ARRAY']
 
 const keywords = [
     'IF', 'THEN', 'ELSE', 'ENDIF',
+    'CASE', 'OTHERWISE', 'ENDCASE',
     'WHILE', 'ENDWHILE',
     'REPEAT', 'UNTIL',
-    'FOR', 'TO', 'NEXT',
+    'FOR', 'TO', 'NEXT', 'STEP',
     'OUTPUT', 'INPUT', 'PRINT',
     'PROCEDURE', 'ENDPROCEDURE', 'FUNCTION', 'ENDFUNCTION', 'CALL', 'RETURNS',
     'TRUE', 'FALSE',
     'AND', 'OR', 'NOT',
     'DIV', 'MOD', 'OF',
-    'OPENFILE', 'CLOSEFILE', 'READFILE', 'WRITEFILE', 'FOR'
+    'OPENFILE', 'CLOSEFILE', 'READFILE', 'WRITEFILE'
 ];
 
 const fileModes = [
@@ -69,6 +70,25 @@ const SUGGESTIONS = [
         documentation: 'End of a Conditional Statement',
     },
     {
+        label: 'CASE',
+        kind: monaco.languages.CompletionItemKind.Keyword,
+        insertText: 'CASE OF ${1:variable}\n\t${2:cases}\n\tOTHERWISE:${3:actions}\nENDCASE',
+        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+        documentation: 'Start of a CASE statement',
+    },
+    {
+        label: 'OTHERWISE',
+        kind: monaco.languages.CompletionItemKind.Keyword,
+        insertText: 'OTHERWISE\n\t${1:actions}\nENDCASE',
+        documentation: 'Default block if no other cases match',
+    },
+    {
+        label: 'ENDCASE',
+        kind: monaco.languages.CompletionItemKind.Keyword,
+        insertText: 'ENDCASE\n',
+        documentation: 'End of a CASE statement',
+    },
+    {
         label: 'WHILE',
         kind: monaco.languages.CompletionItemKind.Keyword,
         insertText: 'WHILE ${1:condition} \n\t\nENDWHILE',
@@ -98,9 +118,16 @@ const SUGGESTIONS = [
     {
         label: 'FOR',
         kind: monaco.languages.CompletionItemKind.Keyword,
-        insertText: 'FOR ${1:variable} <- ${2:start} TO ${3:end} \n\t${4:actions}\nNEXT ${1}',
+        insertText: 'FOR ${1:variable} <- ${2:start} TO ${3:end} STEP ${4:step} \n\t${5:actions}\nNEXT ${1}',
         insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-        documentation: 'Start of a FOR loop',
+        documentation: 'Start of a FOR loop, or specify the file access mode in OPENFILE statements',
+    },
+    {
+        label: 'STEP',
+        kind: monaco.languages.CompletionItemKind.Keyword,
+        insertText: 'STEP ${1:step}',
+        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+        documentation: 'Defines the step of a FOR loop',
     },
     {
         label: 'TO',
@@ -427,7 +454,7 @@ const SUGGESTIONS = [
         label: 'OF',
         kind: monaco.languages.CompletionItemKind.Keyword,
         insertText: 'OF',
-        documentation: 'Defines the type of an array',
+        documentation: 'Defines the type of an array, or used in "CASE OF" statements',
     },
     {
         label: 'ENDTYPE',
