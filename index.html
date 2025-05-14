@@ -6,20 +6,67 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&display=swap" rel="stylesheet">
+<script src="https://kit.fontawesome.com/dd0f6de55c.js" crossorigin="anonymous"></script>
   <style>
     html, body, #monaco {
+      font-family: 'Fira Code', monospace;
       margin: 0;
       padding: 0;
       height: 100vh;
       width: 100vw;
     }
 
+    .floating-panel {
+      position: fixed;
+      bottom: 18px;
+      right: 26px;
+      background: rgba(0, 0, 0, 0.8);
+      padding: 10px;
+      border-radius: 8px;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      backdrop-filter: blur(5px);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .panel-link {
+      color: #fff;
+      text-decoration: none;
+      padding: 8px 12px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: background-color 0.2s;
+    }
+
+    .panel-link:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .panel-link i {
+      font-size: 16px;
+    }
   </style>
   <link rel="stylesheet" data-name="vs/editor/editor.main" href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/editor/editor.main.min.css">
   <link href=" https://cdn.jsdelivr.net/npm/vscode-codicons@0.0.17/dist/codicon.min.css" rel="stylesheet">
 </head>
 <body>
+  <div class="floating-panel">
+    <a href="pseudo_ide_enhanced.user.js" target="_blank" class="panel-link">
+      <i class="fas fa-download"></i> Script
+    </a>
+    <a href="https://github.com/sblzdddd/pseudo-ide-enhanced" target="_blank" class="panel-link">
+      <i class="fab fa-github"></i> GitHub
+    </a>
+    <a href="https://ide.sciedev.com" target="_blank" class="panel-link">
+      <i class="fas fa-terminal"></i> IDE
+    </a>
+  </div>
   <div id="monaco"></div>
+  
 
 <script type="module" src="pseudo-ide.js"></script>
 </body>

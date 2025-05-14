@@ -1,0 +1,146 @@
+html, body {
+  overflow-x: hidden;
+  background-color: #181818! important;
+}
+.root {
+  align-items: stretch;
+}
+.browser {
+  background-color: #181818;
+  min-width: 20%;
+  border-right: 1px solid #303030;
+  display: flex;
+  flex-direction: column;
+}
+@media only screen and (max-width: 600px) {
+  .browser {
+      display: none !important;
+  }
+}
+.terminal-container {
+  padding-top: 20px;
+  padding-left: 20px;
+  padding-bottom: 10px;
+  background-color: #181818;
+  border-top: 1px solid #303030
+}
+.right {
+  flex-grow: 1;
+}
+#monaco {
+  flex-grow: 1;
+}
+.xterm .xterm-viewport {
+  /* On OS X this is required in order for the scroll bar to appear fully opaque */
+  background-color: transparent;
+  overflow-y: scroll;
+  cursor: default;
+  position: absolute;
+  right: 0;
+  left: 0;
+  top: 0;
+  bottom: 0;
+}
+
+.xterm-viewport::-webkit-scrollbar {
+  background: none;
+  width: 12px;
+}
+
+.xterm-viewport::-webkit-scrollbar-thumb {
+  background: #ffffff10;
+  transition: all 250ms ease;
+}
+.xterm-viewport::-webkit-scrollbar-thumb:hover {
+  background: #ffffff30;
+}
+.xterm-viewport::-webkit-scrollbar-thumb:active {
+  background: #ffffff25;
+}
+.top-panel {
+  height: 35px;
+  background-color: #181818;
+  border-bottom: 1px solid #303030;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+}
+.tabs-container {
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+}
+.actions-container {
+  align-items: center;
+  display: flex;
+  margin-right: 10px;
+  gap: 10px;
+}
+.action-item {
+  border-radius: 5px;
+  display: flex;
+  padding: 3px;
+}
+.action-item span{
+  display: inline-block;
+  aspect-ratio: 1 / 1;
+  width: 16px;
+  color: #ffffffef;
+}
+.action-item:hover:not([disabled]) {
+  background-color: #ffffff20
+}
+.action-item:active:not([disabled]) {
+  background-color: #ffffff15
+}
+.loading {
+  mask-image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0nMjQnIGhlaWdodD0nMjQnIHN0cm9rZT0nIzAwMCcgdmlld0JveD0nMCAwIDI0IDI0JyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnPjxzdHlsZT4uc3Bpbm5lcl9WOG0xe3RyYW5zZm9ybS1vcmlnaW46Y2VudGVyO2FuaW1hdGlvbjpzcGlubmVyX3pLb2EgMnMgbGluZWFyIGluZmluaXRlfS5zcGlubmVyX1Y4bTEgY2lyY2xle3N0cm9rZS1saW5lY2FwOnJvdW5kO2FuaW1hdGlvbjpzcGlubmVyX1lwWlMgMS41cyBlYXNlLW91dCBpbmZpbml0ZX1Aa2V5ZnJhbWVzIHNwaW5uZXJfektvYXsxMDAle3RyYW5zZm9ybTpyb3RhdGUoMzYwZGVnKX19QGtleWZyYW1lcyBzcGlubmVyX1lwWlN7MCV7c3Ryb2tlLWRhc2hhcnJheTowIDE1MDtzdHJva2UtZGFzaG9mZnNldDowfTQ3LjUle3N0cm9rZS1kYXNoYXJyYXk6NDIgMTUwO3N0cm9rZS1kYXNob2Zmc2V0Oi0xNn05NSUsMTAwJXtzdHJva2UtZGFzaGFycmF5OjQyIDE1MDtzdHJva2UtZGFzaG9mZnNldDotNTl9fTwvc3R5bGU+PGcgY2xhc3M9J3NwaW5uZXJfVjhtMSc+PGNpcmNsZSBjeD0nMTInIGN5PScxMicgcj0nOS41JyBmaWxsPSdub25lJyBzdHJva2Utd2lkdGg9JzMnPjwvY2lyY2xlPjwvZz48L3N2Zz4=);
+  
+  background-color: #ffffffef;
+  -webkit-mask-size: 80%;
+  mask-size: 80%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+}
+#status-text {
+  font-size: 0.7rem;
+  color: #ffffff50;
+}
+.tab-title {
+  margin-left: 10px;
+  font-size: 0.8rem;
+  color: #ffffffef;
+}
+.terminal-head {
+  border-top: 1px solid #303030;
+  border-bottom: none;
+}
+.menu summary {
+  list-style: none;
+}
+
+.menu li:not(:has(summary)), .menu summary {
+  cursor: pointer;
+  padding: 4px 12px;
+  font-size: 0.7rem;
+}
+.menu li:not(:has(summary)):hover, .menu summary:hover {
+  background-color: #ffffff20;
+}
+.menu :where(li ul) {
+  position: relative;
+  white-space: nowrap;
+  margin-inline-start: 1rem;
+  padding-inline-start: .4rem;
+}
+.menu :where(li ul):before {
+  position: absolute;
+  bottom: .3rem;
+  top: .3rem;
+  inset-inline-start: 0;
+  width: 1px;
+  background-color: #ffffff20;
+  content: "";
+}

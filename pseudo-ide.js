@@ -728,4 +728,6 @@ NEXT`,
     fontFamily: 'Fira Code',
     fontLigatures: true,
     automaticLayout: true,
+    smoothScrolling: true,
+    cursorSmoothCaretAnimation: true,
 });
