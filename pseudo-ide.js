@@ -14,7 +14,12 @@ const keywords = [
     'PROCEDURE', 'ENDPROCEDURE', 'FUNCTION', 'ENDFUNCTION', 'CALL', 'RETURNS',
     'TRUE', 'FALSE',
     'AND', 'OR', 'NOT',
-    'DIV', 'MOD', 'OF'
+    'DIV', 'MOD', 'OF',
+    'OPENFILE', 'CLOSEFILE', 'READFILE', 'WRITEFILE', 'FOR'
+];
+
+const fileModes = [
+    'READ', 'WRITE', 'APPEND'
 ];
 
 const functions = [
@@ -23,14 +28,15 @@ const functions = [
     'LCASE', 'UCASE', 'ASC', 'CHR',
     'INT', 'RAND', 'POW', 'EXP', 'LN',
     'SIN', 'COS', 'TAN', 'ASIN', 'ACOS', 'ATAN', 'ATAN2',
-    'LOG', 'SQRT'
+    'LOG', 'SQRT',
+    'EOF'
 ];
 
 const declarations = [
     'DECLARE', 'CONSTANT', 'TYPE', 'ENDTYPE'
 ];
 
-const constants = ['PI'];
+const constants = [];
 
 const returns = ['RETURN']
 
@@ -144,6 +150,12 @@ const SUGGESTIONS = [
         insertText: 'PROCEDURE ${1:name}(${2:parameters}) \n\t${3:actions}\nENDPROCEDURE',
         insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
         documentation: 'Start of a procedure block',
+    },
+    {
+        label: 'ENDPROCEDURE',
+        kind: monaco.languages.CompletionItemKind.Keyword,
+        insertText: 'ENDPROCEDURE',
+        documentation: 'End of a procedure block',
     },
     {
         label: 'FUNCTION',
@@ -391,12 +403,6 @@ const SUGGESTIONS = [
         documentation: 'Returns the square root of a number',
     },
     {
-        label: 'PI',
-        kind: monaco.languages.CompletionItemKind.Constant,
-        insertText: 'PI',
-        documentation: 'The mathematical constant π (approximately 3.141592654)',
-    },
-    {
         label: 'DECLARE',
         kind: monaco.languages.CompletionItemKind.Keyword,
         insertText: 'DECLARE ${1:variable} : ${2:type}',
@@ -466,7 +472,48 @@ const SUGGESTIONS = [
         insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
         documentation: 'Array data type',
     },
-    
+    {
+        label: 'OPENFILE',
+        kind: monaco.languages.CompletionItemKind.Keyword,
+        insertText: 'OPENFILE ${1:filename} FOR ${2:mode}',
+        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+        documentation: 'Opens a file for further operations',
+    },
+    {
+        label: 'CLOSEFILE',
+        kind: monaco.languages.CompletionItemKind.Keyword,
+        insertText: 'CLOSEFILE ${1:filename}',
+        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+        documentation: 'Closes a file',
+    },
+    {
+        label: 'READFILE',
+        kind: monaco.languages.CompletionItemKind.Keyword,
+        insertText: 'READFILE ${1:filename}, ${2:variable}',
+        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+        documentation: 'Reads one line from a file to a variable',
+    },
+    {
+        label: 'WRITEFILE',
+        kind: monaco.languages.CompletionItemKind.Keyword,
+        insertText: 'WRITEFILE ${1:filename}, ${2:variable}',
+        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+        documentation: 'Writes a variable as a line to a file',
+    },
+    {
+        label: 'FOR',
+        kind: monaco.languages.CompletionItemKind.Keyword,
+        insertText: 'FOR ${1:IOMode}',
+        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+        documentation: 'Specifies the access mode of the file',
+    },
+    {
+        label: 'EOF',
+        kind: monaco.languages.CompletionItemKind.Keyword,
+        insertText: 'EOF(${1:filename})',
+        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+        documentation: 'Checks if the end of a file has been reached',
+    }
 ];
 
 // Define tokens for syntax highlighting
@@ -477,6 +524,7 @@ monaco.languages.setMonarchTokensProvider('cie-pseudocode', {
     returns: returns,
     dataTypes: dataTypes,
     declarations: declarations,
+    fileModes: fileModes,
     operators: ['=', '<', '>', '<=', '>=', '<>', '+', '-', '*', '/', 'DIV', 'MOD'],
     symbols: /[=><!~?:&|+\-*\/\^]+/,
     escapes: /\\(?:[abfnrtv\\"']|x[0-9A-Fa-f]{1,4}|u[0-9A-Fa-f]{4}|U[0-9A-Fa-f]{8})/,
@@ -491,6 +539,7 @@ monaco.languages.setMonarchTokensProvider('cie-pseudocode', {
                     '@returns': 'keyword.return',
                     '@dataTypes': 'type',
                     '@declarations': 'declaration',
+                    '@fileModes': 'keyword.fileMode',
                 }
             }],
             [/[A-Z][\w\$]*/, 'type.identifier'],
@@ -508,6 +557,7 @@ monaco.languages.setMonarchTokensProvider('cie-pseudocode', {
             
             // assignment operator
             [/<-/, 'operator.assignment'],
+            [/&/, 'operator.concatenation'],
 
             // strings
             [/"([^"\\]|\\.)*$/, 'string.invalid'], // non-teminated string
@@ -541,7 +591,7 @@ monaco.languages.setMonarchTokensProvider('cie-pseudocode', {
 });
 
 
-monaco.editor.defineTheme('Dildo', {
+monaco.editor.defineTheme('pseudo-dark', {
     base: 'vs-dark',
     inherit: true,
     rules: [
@@ -575,6 +625,10 @@ monaco.editor.defineTheme('Dildo', {
         },
         {
             token: "operator.assignment",
+            foreground: "c77dbb",
+        },
+        {
+            token: "operator.concatenation",
             foreground: "c77dbb",
         },
         {
@@ -626,9 +680,51 @@ monaco.languages.registerHoverProvider('cie-pseudocode', {
 }
 });
 window.editor = monaco.editor.create(document.getElementById('monaco'), {
-    value: `DECLARE myList : ARRAY[0:8] OF INTEGER\nPROCEDURE Initialize()\n\tmyList[0] <- 27\n\tmyList[1] <- 19\n\tmyList[2] <- 36\n\tmyList[3] <- 42\n\tmyList[4] <- 16\n\tmyList[5] <- 89\n\tmyList[6] <- 21\n\tmyList[7] <- 16\n\tmyList[8] <- 55\nENDPROCEDURE\n\nPROCEDURE BubbleSort()\n\tDECLARE ub : INTEGER\n\tDECLARE lb : INTEGER\n\tDECLARE i : INTEGER\n\tDECLARE swap : BOOLEAN\n\tDECLARE temp : INTEGER\n\tDECLARE top : INTEGER\n\tub <- 8\n\tlb <- 0\n\ttop <- ub\n\tREPEAT\n\t\tFOR i <- lb TO top - 1\n\t\t\tswap <- FALSE\n\t\t\tIF myList[i] > myList[i+1]\n\t\t\t\tTHEN\n\t\t\t\t\ttemp <- myList[i]\n\t\t\t\t\tmyList[i] <- myList[i+1]\n\t\t\t\t\tmyList[i+1] <- temp\n\t\t\t\t\tswap <- TRUE\n\t\t\tENDIF\n\t\t\tNEXT\n\t\ttop <- top -1\n\tUNTIL (NOT swap) AND (top = 0)\nENDPROCEDURE\n\nCALL Initialize()\nCALL Sort()\n\nFOR i <- 0 TO 8\n\tOUTPUT myList[i]\nNEXT i`,
+    value: `DECLARE myList : ARRAY[0:8] OF INTEGER
+
+PROCEDURE Initialize()
+    myList[0] <- 27
+    myList[1] <- 19
+    myList[2] <- 36
+    myList[3] <- 42
+    myList[4] <- 16
+    myList[5] <- 89
+    myList[6] <- 21
+    myList[7] <- 16
+    myList[8] <- 55
+ENDPROCEDURE
+
+PROCEDURE BubbleSort(lb: INTEGER, ub: INTEGER)
+    DECLARE i : INTEGER
+    DECLARE swap : BOOLEAN
+    DECLARE temp : INTEGER
+    DECLARE top : INTEGER
+    top <- ub
+    REPEAT
+        FOR i <- lb TO top - 1
+            swap <- FALSE
+            IF myList[i] > myList[i+1]
+            THEN
+                temp <- myList[i]
+                myList[i] <- myList[i+1]
+                myList[i+1] <- temp
+                swap <- TRUE
+            ENDIF
+        NEXT
+        top <- top -1
+    UNTIL (NOT swap) AND (top = 0)
+ENDPROCEDURE
+
+ub <- 8
+lb <- 0
+CALL Initialize()
+CALL BubbleSort(0, 8)
+
+FOR i <- 0 TO 8
+    OUTPUT myList[i]
+NEXT`,
     language: 'cie-pseudocode',
-    theme: 'Dildo',
+    theme: 'pseudo-dark',
     fontFamily: 'Fira Code',
     fontLigatures: true,
     automaticLayout: true,
